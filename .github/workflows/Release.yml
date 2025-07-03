@@ -27,19 +27,11 @@ jobs:
       - name: Build project
         run: dotnet build --configuration Release --no-restore
 
-      - name: Publish single-file EXE
-        run: |
-          dotnet publish ./GOMPPDMLoader/GOMPPDMLoader.csproj `
-            --configuration Release `
-            --runtime win-x64 `
-            --self-contained true `
-            /p:PublishSingleFile=true `
-            /p:IncludeNativeLibrariesForSelfExtract=true `
-            /p:PublishTrimmed=false `
-            /p:Version=${{ github.event.inputs.versionNumber }}
+      - name: Publish project
+        run: dotnet publish ./GOMPPDMLoader/GOMPPDMLoader.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o publish
 
-      - name: Upload published EXE as artifact
+      - name: Upload GOMPPDMLoader build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: GOMPPDMLoader-${{ github.event.inputs.versionNumber }}
-          path: ./GOMPPDMLoader/bin/Release/net8.0/win-x64/publish/
+          name: GOMPPDMLoader
+          path: publish/GOMPPDMLoader.exe
